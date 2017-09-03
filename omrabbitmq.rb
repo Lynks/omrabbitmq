@@ -23,7 +23,7 @@ end
 
 class RabbitMQLogger
 	def initialize
-		@logger = Logger.new("rmq.log")
+		@logger = Logger.new("omrabbitmq.log")
 		@logger.info "start"
 
 		@pub = Publisher.new

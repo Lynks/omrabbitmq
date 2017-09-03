@@ -17,4 +17,4 @@ be sure to set the environment variable `RSYSLOG_RMQ_URI` with the [connection s
 gem install bunny
 RSYSLOG_RMQ_URI='amqp://user:pass@host:port/vhost' ruby omrabbitmq.rb
 ```
-`ctrl+D` to stop exit the program
+`ctrl+D` to stop accepting messages

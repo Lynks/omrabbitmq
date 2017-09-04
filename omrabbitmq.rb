@@ -1,15 +1,15 @@
 require "bunny"
 require "logger"
+require "yaml"
 
 class Publisher
-	def initialize
-		# amqp://user:pass@host:port/vhost
-		@connection = Bunny.new ENV["RSYSLOG_RMQ_URI"]
+	def initialize(rmq_uri, exchange)
+		@connection = Bunny.new rmq_uri
 
 		@connection.start
 		@channel = @connection.create_channel
 
-		@exchange = @channel.direct("rsyslog", durable: true)
+		@exchange = @channel.direct(exchange, durable: true)
 	end
 
 	def publish(message)
@@ -23,10 +23,11 @@ end
 
 class RabbitMQLogger
 	def initialize
-		@logger = Logger.new("omrabbitmq.log")
+		@logger = Logger.new(File.join(__dir__, "omrabbitmq.log"))
+		@settings = YAML.load_file File.join(__dir__, "settings.yml")
 		@logger.info "start"
 
-		@pub = Publisher.new
+		@pub = Publisher.new(@settings["rabbitmq_uri"], @settings["exchange"])
 	end
 
 	def read
